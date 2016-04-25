@@ -1,7 +1,6 @@
 drop table if exists logs;
 drop table if exists user_log;
 drop table if exists flock_number;
-drop table if exists user_flock;
 drop table if exists flock;
 drop table if exists friend;
 drop table if exists users;
@@ -21,6 +20,7 @@ create table friend(
 	friendID char(8) not null,
 	groupname varchar(10) default 'myfriends',
 	remark varchar(10),
+	hasSession boolean default false,
 	primary key(ID,friendID),
 	foreign key(ID) references users(ID)
 		on delete cascade,
