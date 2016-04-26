@@ -1,16 +1,13 @@
 package client;
 
-public class ClientView {
+import java.util.HashSet;
+import java.util.List;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+class ClientView {
+	
+	ClientControler controler;
+	public ClientView(){
+		controler=new ClientControler();
 	}
-	/*
-	 * If has get the friendList and flockList
-	 * Then we can get the sessionList
-	 */
-	void getSessionList(){
-		
-	}
+	
 }
