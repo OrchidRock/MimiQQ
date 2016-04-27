@@ -5,9 +5,9 @@ import java.util.List;
 
 class ClientView {
 	
-	ClientControler controler;
+	ClientMoudle moudle;
 	public ClientView(){
-		controler=new ClientControler();
+		moudle=new ClientMoudle();
 	}
 	
 }
