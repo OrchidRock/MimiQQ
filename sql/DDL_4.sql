@@ -14,11 +14,11 @@ create table quser (
 	ID char(8) not null primary key,
 	nickname varchar(10) not null,
 	password char(16) not null,
-	ipaddress bigint,
-	openPort int,
-	onlinestate boolean default false,
 	email varchar(20),
 	image blob(6144)
+	onlinestate boolean default false,
+	ipaddress bigint,
+	openPort int,
 );
 create table quser_invite_quser(
 	inviterID char(8) not null,
@@ -38,6 +38,7 @@ create table qflock(
 	createrID char(8),
 	createDate datetime,
 	image blob(6144),
+	notes varchar(200),
 	foreign key(createrID) references quser(ID)
 			on delete set null
 );
@@ -45,7 +46,7 @@ create table qflock_record(
 	qflockID char(8) not null,
 	senderID char(8) not null,
 	recordID char(10) not null,
-	recordType enum('message','picture','file','goodbay','seehere') default 'message',	
+	recordType enum('message','picture','file','iamback','goodbay','iamquit') default 'message',	
 	recordDate datetime not null,
 	data varchar(512),
 	primary key(qflockID,senderID,recordID),
@@ -87,7 +88,8 @@ create table qfriend_record(
 	ownerID char(8) not null,
 	qfriendID char(8) not null,
 	recordID char(10) not null,
-	recordtype enum('message','picture','file','goodbay') default 'message',	
+	recordtype enum('message','picture','file','iamback','goodbay','breakoff','seehere') 
+		default 'message',	
 	recordDate datetime not null,
 	data varchar(512),
 	primary key(ownerID,qfriendID,recordID),
