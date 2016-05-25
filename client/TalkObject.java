@@ -1,35 +1,26 @@
 package client;
 
+
 /**
  * This class is s super class
  * of User and Flock.
  * 
  */
 public class TalkObject {
-	protected String ID;
-	public static enum TalkRoleType{
-		USER,FLOCK
-	}
-	private TalkRoleType myTalkRole;
-	
+	String ID;
+	String name;
+	byte[] image;
 	public TalkObject(){
-		ID=null;
-		myTalkRole=TalkRoleType.USER;
+		ID="";
+		name="";
+		image=null;
 	}
-	
-	public TalkRoleType getMyTalkRoleType(){
-		return myTalkRole;
+	public TalkObject(String id,String name,byte[] image){
+		this.ID=id;
+		this.name=name;
+		this.image=image;
 	}
-	
-	final public String getTalkObjectID(){
-		return ID;
-	}
-	public void setTalkObjectID(String newID){
-		if(newID==null || newID.length()<1){
-			System.err.println("TalkObject: setTalkObject---UsgError:new ID argument"
-					+ "is not allowed");
-			return;
-		}
-		ID=newID;
+	public String toString(){
+		return "id="+ID+",name="+name;
 	}
 }

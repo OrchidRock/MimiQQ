@@ -1,207 +1,140 @@
 package client;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import client.Flock.FlockNumber;
-import client.Flock.FlockNumberRoleType;
-import client.TalkObject.TalkRoleType;
-import tools.PrintDebug;
-import tools.PrintDebug.ErrorType;
-import transaction.TPControler;
+import transaction.Controler;
 class ClientMoudle {
 	private Loginer loginer;
-	TPControler controler;
+	Controler controler;
 	public ClientMoudle(){
-		controler=new TPControler();
+		controler=new Controler();
 		loginer=null;
 	}
-	
-	/**
-	 * get friend list,flock list And session list. 
-	 */
-	/*private boolean start(){
-		//List<TalkObject> talkObjects=controler.getTalkObjectList(loginer.getUserID());
-		loginer.friends=controler.fatchUserFriends(loginer.getTalkObjectID());
-		if(friends==null){
-			PrintDebug.PD("Moudle", "start", ErrorType.NULL_POINTER);
-			return false;
-		}
-		flocks=controler.fatchUserFlocks(loginer.getTalkObjectID());
-		if(flocks==null){
-			PrintDebug.PD("Moudle", "start", ErrorType.NULL_POINTER);
-			return false;
-		}
-		return true;
-	}*/
-	/**
-	 * login,get the loginer and loginer's friends and flocks.
-	 * @param userID the loginer's ID.
-	 * @param password the loginer's password.
-	 * @return whether login success.
-	 */
-	public boolean login(String userID,String password){
-		if(userID==null || password==null){
-			PrintDebug.PD("Moudle", "login", ErrorType.USAGE_ERR);
-			return false;
-		}
-		
-		loginer=controler.qlogin(userID, password);
-		if(loginer==null){
-			PrintDebug.PD("Moudle", "login", ErrorType.NULL_POINTER);
-			return false;
-		} 
-		return true;
-	}
-	public boolean register(User register){
-		Loginer temp=controler.qregister(register);
-		if(temp!=null){
-			loginer=temp;
-			return true;
-		}else
-			return false;
-	}
-	public List<User> searchUser(String searchKey){
-		//controler.searchTalkObject(searchKey);	
-		return controler.searchUserByKey(searchKey);
-	}
-	public List<Flock> searchFlock(String searchKey){
-		return controler.searchFlockByKey(searchKey);
-	}
-	
-	/**
-	 * The most important thing is the friend object
-	 * return by controler.inviteNewFriend().It can be REAL friend,
-	 * INVITEE friend(NO INVITER).
-	 * @return when return true,the view can update it's friend-list
-	 *         else,do nothing(show a remain to GUI-user).
-	 */
-	//
-	public boolean inviteOrApplicantNewTalkObject(TalkObject gObject){
-		if(gObject.getMyTalkRoleType()==TalkRoleType.USER){
-			User user=(User)gObject;
-			if(gObject.getTalkObjectID().equals(loginer.getTalkObjectID()))
-				return true;
-			if(!controler.inviteNewFriend(loginer.getTalkObjectID(), user))
-				return false;
-		}else{
-			/**
-			 * try to avoid apply [instanceof] key word and type converting.
-			 */
-			Flock flock=null;
-			if(gObject instanceof Flock)
-				flock=(Flock)gObject;
-			else
-				return false;
-			
-			
-			Flock stFlock=(Flock)findTalkObject(flock.getTalkObjectID(), gObject.getMyTalkRoleType());/*repeat applicant*/
-			if(stFlock!=null)
-				return true;
-			if(!controler.applicantNewFlock(loginer.getTalkObjectID(),flock))
-				return false;
-		}
-		return true;
-	}
-	public boolean agreeFriendInvite(Friend friend){/*groupname and remark*/
-		return controler.agreeUserInvite(loginer.getTalkObjectID(), friend);
-	}
-	public boolean agreeApplicant(String flockID,FlockNumber applicant){
-		applicant.myType=FlockNumberRoleType.NNUMBER;
-		return controler.agreeApplicant(flockID,applicant);
-	}
-	public boolean rejectInvite(Friend friend){
-		return controler.rejectInvite(friend);
-	}
-	public boolean rejectApplicant(Flock flock,FlockNumber number){
-		if(controler.rejectApplicant(flock,number.getTalkObjectID())){
-			flock.getFlockNumbers().remove(number);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean deleteFriend(Friend friend){
-		return controler.rejectInvite(friend);
-	}
-	public boolean quitFlock(Flock fl){
-		if(loginer.getTalkObjectID().equals(fl.getCreaterID())){
-			System.err.println("Moudle:quitFlock---Warning:GUI-user is try to quit"
-					+ "the flock creater by himself.!");
-			return false;
-		}
-		return controler.rejectApplicant(fl, loginer.getTalkObjectID());
-	}
-	public boolean dissolveFlock(Flock fl){
-		for(Flock f:loginer.getFlockList()){
-			if(f.equals(fl)){
-				if(!f.getCreaterID().equals(loginer.getTalkObjectID())){
-					System.err.println("Moudle:quitFlock---Warning:GUI-user is try to"
-							+ " dissolve the flock not creater by himself.!");
-					return false;
-				}
-				break;
-			}
-		}
-		return controler.dissolveFlock(fl);
-	}
-	/**
-	 * loginer create a new flock.
-	 */
-	public boolean createMyFlock(Flock newflock){
-		return controler.createMyFlock(loginer.getTalkObjectID(), newflock);
-	}
-	
-	public void Exit(){
-		// the operation for local cache.	
-	}
-	
-	private TalkObject findTalkObject(String toID,TalkRoleType trt){
-		if(trt==TalkRoleType.USER){
-			for(Friend f:loginer.getFriendList()){
-				if(f.getTalkObjectID().equals(toID))
-					return f;
-			}
-		}else{
-			for(Flock flock:loginer.getFlockList()){
-				if(flock.getTalkObjectID().equals(toID))
-					return flock;
-			}
-		}
+	public List<Record> getFriendRecords(Friend friend){
+		/* send recordreq.xml : get recordreq_back.xml */
 		return null;
 	}
-	public List<Flock> getMyCreateFlocks(){
-		List<Flock> myCreateFlocks=new ArrayList<>();
-		for(Flock f:loginer.getFlockList()){
-			if(f.createrID.equals(loginer.getTalkObjectID()))
-				myCreateFlocks.add(f);
-		}
-		return myCreateFlocks;
+	public List<Record> getFlockRecords(Flock flock){
+		List<Flock> myFlocks=loginer.flocks;
+		if(!myFlocks.contains(flock))
+			return null;
+		/* send recordreq.xml : get recordreq_back.xml */
+		return null;
 	}
-	//Session methods
-	/**
-	 *loginer send message to a friend  
-	 */
-	public boolean  sendMessageToFriend(Friend goalfriend,String message){
-		goalfriend.setHasSession();
+	public Loginer login(String userID,String password){
+		/* send login.xml : get login_back.xml*/
+		/* udp each of online friend a 'IAMBACK' record */
+		return loginer;
+	}
+	public Loginer signin(User register){
+		/* send signin.xml : get signin_back.xml*/
+		return loginer;
+	}
+	public List<TalkObject> searchTalkObject(String srearchKey){
 		
+		/* send search.xml : get search_back.xml */
+		return null;
+	}
+	public void inviteFriend(CreateRelActivity newCRA){
+		/* send invite.xml(action=new)*/
+		/* If target user is onlined then udp
+		   a 'CRA_HELLO' record */
+		
+	}
+	public boolean inviteFriendOK(Friend newFriend){
+		/* send invite.xml(action=delete)*/
+		/* send friendadd.xml */
+		/* Note : may be can merge tow XML files */
+		return false;
+	}
+	public void inviteFriendFailed(String friendid){
+		/* send invite.xml(action=delete)*/
+	}
+	public boolean aggreFriendInvite(Friend newFriend){
+		/* send invite.xml(action=setok)*/
+		/* send friendadd.xml */
+		/* Note : may be can merge tow XML files */
+		/* If target user is onlined then udp
+		 a 'CRA_OK' record */
+		return false;
+	}
+	public void rejectFriendInvite(String ownerID,String userID){
+		/* send invite.xml(action=setfailed)*/
+		/* If target user is onlined then udp
+		   a 'CRA_FAILED' record */
+	}
+	public void ignoreFriendInvite(String ownerID,String userID){
+		/* send invite.xml(action=delete)*/
+	}
+	
+	/* API for flock */
+	public void applyForFlock(CreateRelActivity newCRA){
+		/* send invite.xml(action=new)*/
+		/* If flock's creater is onlined then udp
+		 a 'CRA_HELLO' record */
+	}
+	public boolean aggreFlockApplyFor(String flockID,String userID){
+		/* send apply.xml(action=setok)*/
+		/* send flockaddnumber.xml */
+		/* send a record.xml(type=flock:HESHEJOIN)*/
+		/* udp all online number this record */
+		/* Note : may be can merge tow XML files */
+		/* If target user is onlined then udp
+		   a 'CRA_OK' record*/
+		return false;
+	}
+	public void rejectFlockApplyFor(String flockID,String userID){
+		/* send apply.xml(action=setfailed)*/
+		/* If target user is onlined then udp
+		   a 'CRA_FAILED' record */
+	}
+	public void ignoreFlockApplyFor(String flockID,String userID){
+		/* send apply.xml(action=delete)*/
+	}
+	public boolean applyForFlockOk(String flockID){
+		/* send apply.xml(action=delete)*/
+		/* Note : may be can merge tow XML files */
+		return false;
+	}
+	public void applyForFlockFailed(String flockID){
+		/* send apply.xml(action=delete)*/
+	}
+	
+	public boolean deleteFriend(String friendID){
+		/* send frienddelete.xml */
+		/* send a record.xml(type=user:breakoff) */
+		/* udp a 'breakoff' record to friend */
+		return false;
+	}
+	public boolean quitFlock(String flockID){
+		/* send flocknumberquit.xml */
+		/* send a record.xml(type=flock:IAMQUIT)*/
+		/* udp all online number this record */
 		return false;
 	}
 	
-	/**
-	 * loginer recv message from onr friend
-	 */
-	public static void recvMessageFromFriend(String message,Friend fromfriend){
-		//view update.
-		//fromfriend.setHasSession();
+	public Flock createNewFlock(Flock newflock){
+		/* send flockcreate.xml : get flockcreate_back.xml*/
+		return newflock;
 	}
 	
-	public boolean sendMessageToFlock(Flock goalflock,String message){
-		
+	public boolean dissolveFlock(String flockID){
+		/*send flockdelete.xml  */
 		return false;
 	}
-	public static void recvMessageFromFlock(String message,Flock fromflock,User fromuser){
-		
+	
+	public void sendDataToFriend(String friendID,Record record){
+		/* send record.xml(type=user:message or file) */
+		/* if friend is onlined then udp a
+		   'message or others' record*/
+	}
+	public void sendDataToFlock(String flockID,Record record){
+		/* send record.xml(type=flock:message or file) */
+		/* udp each of numbers of flock a 'message or others' record */
+	}
+	public void exit(){
+		/* send exit.xml*/
+		/* udp each of online friend a 'GOODBAY' record */
 	}
 }
 
