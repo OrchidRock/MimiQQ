@@ -15,24 +15,26 @@ create table quser (
 	openPort int,
 	onlinestate boolean default false,
 	email varchar(20),
-	phonenumber char(11),
 	image blob(6144)
 );
 create table record(
-	recordID char(8) not null primary key,
+	recordID char(8) not null,
+	subRecordID char(8) not null,
+	subRecordType enum('message','picture','file') default 'message',	
 	currday datetime not null,
-	recordData blob(102400)
+	recordData blob(102400),
+	primary key(recordID,subRecordID)
 );
 create table qfriend(
-	ID char(8) not null,
+	ownerID char(8) not null,
 	qfriendID char(8) not null,
 	groupname varchar(10) default 'myfriends',
 	remark varchar(10),
 	hasSession boolean default false,
-	recordid char(8),
-	primary key(ID,qfriendID),
-	foreign key(recordid) references record(recordID),
-	foreign key(ID) references quser(ID)
+	recordID char(8),
+	primary key(ownerID,qfriendID),
+	foreign key(recordID) references record(recordID),
+	foreign key(ownerID) references quser(ID)
 		on delete cascade,
 	foreign key(qfriendID) references quser(ID)
 		on delete cascade
@@ -52,8 +54,8 @@ create table qflcok(
 	createrID char(8),
 	createDate datetime,
 	image blob(6144),
-	recordid char(8),
-	foreign key(recordid) references record(recordID),
+	recordID char(8),
+	foreign key(recordID) references record(recordID),
 	foreign key(createrID) references quser(ID)
 		on delete cascade
 );
@@ -76,6 +78,7 @@ create table quser_log(
 create table logs(
 	logID char(10) not null primary key,
 	logdate datetime not null,
+	logtype enum('login','exit') default 'login',
 	logIPaddress bigint,
 	logstate boolean default true
 );
