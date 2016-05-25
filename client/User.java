@@ -11,16 +11,19 @@ public class User extends TalkObject{
 	/*Can be inherited by Friend*/
    // String userID;
 	protected String nickname;
-	protected String emailAddress;
+	protected String emailAddress; 
 	protected String phonenumber;
 	protected byte [] imageBytes;
+	
+	protected boolean onlineState;
 	
 	public User(){
 		super();
 		nickname=null;
 		emailAddress=null;
-		phonenumber=null;
+		phonenumber=null;  
 		imageBytes=null;
+		onlineState=false;
 	}
 	public String getUserShowInfo(){
 		StringBuilder builder=new StringBuilder();

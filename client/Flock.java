@@ -53,6 +53,7 @@ public class Flock extends TalkObject{
 			return createrID;
 		return null;
 	}
+	@Deprecated
 	public void setCreaterID(String id){
 		createrID=id;
 	}

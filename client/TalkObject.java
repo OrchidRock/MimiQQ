@@ -11,6 +11,7 @@ public class TalkObject {
 		USER,FLOCK
 	}
 	private TalkRoleType myTalkRole;
+	
 	public TalkObject(){
 		ID=null;
 		myTalkRole=TalkRoleType.USER;
@@ -20,7 +21,7 @@ public class TalkObject {
 		return myTalkRole;
 	}
 	
-	public String getTalkObjectID(){
+	final public String getTalkObjectID(){
 		return ID;
 	}
 	public void setTalkObjectID(String newID){

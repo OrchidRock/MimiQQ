@@ -6,5 +6,7 @@ class ClientView {
 	public ClientView(){
 		moudle=new ClientMoudle();
 	}
-	
+	public static void recvMessageFromFriend(Friend friend,String message){
+		
+	}
 }

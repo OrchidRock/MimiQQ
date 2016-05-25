@@ -85,7 +85,16 @@ class ClientMoudle {
 			if(!controler.inviteNewFriend(loginer.getTalkObjectID(), user))
 				return false;
 		}else{
-			Flock flock=(Flock)gObject;
+			/**
+			 * try to avoid apply [instanceof] key word and type converting.
+			 */
+			Flock flock=null;
+			if(gObject instanceof Flock)
+				flock=(Flock)gObject;
+			else
+				return false;
+			
+			
 			Flock stFlock=(Flock)findTalkObject(flock.getTalkObjectID(), gObject.getMyTalkRoleType());/*repeat applicant*/
 			if(stFlock!=null)
 				return true;
@@ -169,4 +178,46 @@ class ClientMoudle {
 		}
 		return myCreateFlocks;
 	}
+	//Session methods
+	/**
+	 *loginer send message to a friend  
+	 */
+	public boolean  sendMessageToFriend(Friend goalfriend,String message){
+		goalfriend.setHasSession();
+		
+		return false;
+	}
+	
+	/**
+	 * loginer recv message from onr friend
+	 */
+	public static void recvMessageFromFriend(String message,Friend fromfriend){
+		//view update.
+		//fromfriend.setHasSession();
+	}
+	
+	public boolean sendMessageToFlock(Flock goalflock,String message){
+		
+		return false;
+	}
+	public static void recvMessageFromFlock(String message,Flock fromflock,User fromuser){
+		
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

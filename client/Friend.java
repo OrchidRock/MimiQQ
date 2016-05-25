@@ -16,7 +16,6 @@ public class Friend extends User{
 	public static enum FriendRoleType{
 		REAL,INVITEE,INVITER
 	}
-	protected boolean onlineState;
 	
 	protected FriendRoleType friendType;
 	
@@ -43,7 +42,11 @@ public class Friend extends User{
 	public void setFriendType(FriendRoleType type){
 		friendType=type;
 	}
+	@Deprecated
 	public void setOwnerID(String id){
 		ownerID=id;
 	}
+	protected void setHasSession(){
+		hasSession=true;
+	} 
 }
