@@ -22,3 +22,4 @@ public class PrintDebug {
 		System.out.println(className+": "+methodName+"---"+": "+inform);
 	}
 }
+
