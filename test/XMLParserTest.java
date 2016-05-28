@@ -13,11 +13,11 @@ import tools.XMLParser;
 public class XMLParserTest {
 
 	public static void main(String[] args) {
-		File file=new File("loginback.xml");
+		//File file=new File("loginback.xml");
 		//File file=new File("signinback.xml");
 		//File file=new File("xmlbuildertest.xml");
 		//File file=new File("recordreqback.xml");
-		//File file=new File("searchback.xml");
+		File file=new File("searchback.xml");
 		try {
 			InputStream inputStream=Files.newInputStream(file.toPath());
 			TDU tdu=XMLParser.parser(inputStream);

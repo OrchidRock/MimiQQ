@@ -4,6 +4,7 @@
 					|flockcreate|flockdelete|flocknumbersreq
 					|flocknumbersreqback|getonlineuserap		
 				        |getonlineuserapback|exit)>
+<!ATTLIST mimiqq xmlns CDATA #FIXED "www.orchid.party/mimiqq">
 <!-- login -->
 <!ELEMENT login (user)>
 

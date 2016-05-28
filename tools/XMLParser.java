@@ -1,14 +1,11 @@
 package tools;
 
-import java.awt.RadialGradientPaint;
 import java.io.InputStream;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import com.sun.swing.internal.plaf.basic.resources.basic;
 
 import tools.PrintDebug.ErrorType;
 import tools.TDU.TDUType;
@@ -21,13 +18,17 @@ public class XMLParser {
 		//factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
 		//factory.setProperty(XMLInputFactory.IS_VALIDATING, true);
 		XMLStreamReader reader=factory.createXMLStreamReader(inputStream);
+		//factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
 		TDU tdu=new TDU();
 		
 		while(reader.hasNext()){
 			int event=reader.next();
+			if(event==XMLStreamConstants.DTD){
+				System.out.println(reader.getText());
+			}
 			if((event==XMLStreamConstants.START_ELEMENT)
 					&& reader.getLocalName().equals("mimiqq")){
-				reader.next();
+				reader.nextTag();
 				TDUType xptype=TDUType.valueOf(reader.getLocalName().toUpperCase());
 				switch (xptype) {
 				case LOGINBACK:
@@ -63,7 +64,7 @@ public class XMLParser {
 			if(event==XMLStreamConstants.START_ELEMENT){
 				switch (reader.getLocalName()) {
 				case "user":
-					reader.next();
+					reader.nextTag();
 					findIWantTextAndToTDU(reader,"nickname",tdu,true);
 					findIWantTextAndToTDU(reader, "email", tdu,true);
 					findIWantTextAndToTDU(reader, "imageurl", tdu,false);
@@ -102,7 +103,7 @@ public class XMLParser {
 				case "recordlist":
 					parserRecordList(reader,tdu);break;
 				case "beforeday":
-					findIWantTextAndToTDU(reader, "beforeday", tdu);break;
+					findIWantTextAndToTDU(reader, "beforeday", tdu,false);break;
 				default:
 					PrintDebug.PD("XMLParser", "recordreqback", ErrorType.USAGE_ERR);
 					break;
@@ -148,7 +149,7 @@ public class XMLParser {
 				break;
 			if(event==XMLStreamConstants.START_ELEMENT
 					&& reader.getLocalName().equals("user")){
-				reader.next();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "uid", tdu,true);
 				findIWantTextAndToTDU(reader, "ipaddress", tdu,true);
 				findIWantTextAndToTDU(reader, "openport", tdu,false);
@@ -161,11 +162,12 @@ public class XMLParser {
 				break;
 			if(reader.isStartElement()){
 				findIWantAttributeAndToTDU(reader, "record", tdu);
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "ownerid", tdu,true);
 				findIWantAttributeAndToTDU(reader, "targetid", tdu);
 				tdu.append(reader.getText());
-				reader.next();
-				reader.next();
+				reader.nextTag();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "recorddate", tdu,true);
 				findIWantTextAndToTDU(reader, "data", tdu,false);
 			}
@@ -174,18 +176,18 @@ public class XMLParser {
 	}
 	private static void parserFriendList(XMLStreamReader reader,TDU tdu) throws XMLStreamException{
 		while(reader.hasNext()){
-			int event=reader.next();
+			int event=reader.nextTag();
 			if(reader.isEndElement() && reader.getLocalName().equals("friendlist"))
 				break;
 			if((event==XMLStreamConstants.START_ELEMENT)
 					&&reader.getLocalName().equals("friend")){
-				reader.next();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "uid", tdu,true);
 				findIWantTextAndToTDU(reader, "nickname", tdu,true);
 				findIWantTextAndToTDU(reader, "email", tdu,true);
 				findIWantTextAndToTDU(reader, "imageurl", tdu,true);
 				findIWantAttributeAndToTDU(reader,"onlinestate",tdu);
-				reader.next();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "groupname", tdu,true);
 				findIWantTextAndToTDU(reader, "remark", tdu,true);
 				findIWantAttributeAndToTDU(reader, "hassession", tdu);
@@ -194,12 +196,12 @@ public class XMLParser {
 	}
 	private static void parserFlockList(XMLStreamReader reader,TDU tdu) throws XMLStreamException{
 		while(reader.hasNext()){
-			int event=reader.next();
+			int event=reader.nextTag();
 			if(reader.isEndElement() && reader.getLocalName().equals("flocklist"))
 				break;
 			if((event==XMLStreamConstants.START_ELEMENT)
 					&& reader.getLocalName().equals("flock")){
-					reader.next();
+					reader.nextTag();
 					findIWantTextAndToTDU(reader, "fid", tdu,true);
 					findIWantTextAndToTDU(reader, "name", tdu,true);
 					findIWantTextAndToTDU(reader, "createrid", tdu,true);
@@ -211,17 +213,17 @@ public class XMLParser {
 	}
 	private static void parserCrabackList(XMLStreamReader reader,TDU tdu) throws XMLStreamException{
 		while(reader.hasNext()){
-			int event=reader.next();
+			int event=reader.nextTag();
 			if(reader.isEndElement() && reader.getLocalName().equals("crabacklist"))
 				break;
 			if((event==XMLStreamConstants.START_ELEMENT)
 					&& reader.getLocalName().equals("craback")){
-				reader.next();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "ownerid", tdu,true);
 				findIWantAttributeAndToTDU(reader, "targetid", tdu);
 				tdu.append(reader.getText());
-				reader.next();
-				reader.next();
+				reader.nextTag();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "notes", tdu,true);
 				findIWantTextAndToTDU(reader, "state", tdu,false);
 			}
@@ -245,7 +247,7 @@ public class XMLParser {
 			int event=reader.next();
 			if((event==XMLStreamConstants.START_ELEMENT)
 					&& reader.getLocalName().equals("user")){
-				reader.next();
+				reader.nextTag();
 				findIWantTextAndToTDU(reader, "uid", tdu,true);
 				findIWantTextAndToTDU(reader,"nickname",tdu,true);
 				findIWantTextAndToTDU(reader, "email", tdu,true);
@@ -268,21 +270,12 @@ public class XMLParser {
 	/*
 	 *IF not find then set "unknow" to TDU. 
 	 */
-	private static void findIWantTextAndToTDU(XMLStreamReader reader,String elementname, TDU tdu) throws XMLStreamException {
-		if(reader.getLocalName().equals(elementname)){
-			reader.next();
-			tdu.append(reader.getText());
-			reader.next();
-		}else{
-			tdu.append("unknow");
-		}
-	}
 	private static void findIWantTextAndToTDU(XMLStreamReader reader,String elementname, TDU tdu,boolean tag) throws XMLStreamException {
 		if(reader.getLocalName().equals(elementname)){
 			reader.next();
 			tdu.append(reader.getText());
-			reader.next();
-			if(tag) reader.next();
+			reader.nextTag();
+			if(tag) reader.nextTag();
 		}else{
 			tdu.append("unknow");
 		}

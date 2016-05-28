@@ -24,6 +24,7 @@ class ClientMoudle {
 	public Loginer login(String userID,String password){
 		/* send login.xml : get login_back.xml*/
 		/* udp each of online friend a 'IAMBACK' record */
+		
 		return loginer;
 	}
 	public Loginer signin(User register){
