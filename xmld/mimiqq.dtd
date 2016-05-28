@@ -1,18 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <!ELEMENT mimiqq (login|loginback|signin|signinback|record
-		 |recordreq|recordreqback|search|searchback|CRA
-		 |friendadd|flocknumber|frienddelete
-		 |flockcreate|flockdelete|flocknumbersreq
-		 |flocknumbersreqback|getonlineuserap
-		 |getonlineuserapback|exit )>
-
+					|recordreq|recordreqback|search|searchback
+					|CRA|friendadd|flocknumber|frienddelete
+					|flockcreate|flockdelete|flocknumbersreq
+					|flocknumbersreqback|getonlineuserap		
+				        |getonlineuserapback|exit)>
 <!-- login -->
 <!ELEMENT login (user)>
 
 <!-- user -->
 <!ELEMENT user ((uid)?,(password)?,(nickname,email,imageurl)?,
-		(onlinestate)?,(ipaddress,openport)?)>
+				(onlinestate)?,(ipaddress,openport)?)>
 <!ELEMENT uid (#PCDATA)>
 <!ELEMENT password (#PCDATA)>
 <!ELEMENT ipaddress (#PCDATA)>
@@ -23,15 +20,13 @@
 
 <!-- loginback -->
 <!ELEMENT loginback (user,(friendlist)?,(flocklist)?,(crabacklist)?)>
-<!ELEMENT friendlist (friend)*>
+<!ELEMENT friendlist (friend)+>
 <!ELEMENT flocklist (flock)+>
 <!ELEMENT crabacklist (craback)+>
-j
 <!-- friend -->
-<!ELEMENT friend (uid,(nickname,email,imageurl,onlinestate)?,(groupname
-		  ,remark)?,hassession)>
+<!ELEMENT friend (uid,(nickname,email,imageurl,onlinestate)?,(groupname,remark)?,hassession)>
 <!ELEMENT onlinestate (#PCDATA)>
-<!ATTLIST hassession olstype (Y|N) "Y">
+<!ATTLIST onlinestate olstype (Y|N) "Y">
 <!ELEMENT groupname (#PCDATA)>
 <!ELEMENT remark (#PCDATA)>
 <!ELEMENT hassession (#PCDATA)>
@@ -40,7 +35,7 @@ j
 <!-- flock -->
 <!ELEMENT flock ((fid)?,name,createrid,createdate,imageurl,notes)>
 <!ELEMENT fid (#PCDATA)>
-!ELEMENT name (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
 <!ELEMENT createrid (#PCDATA)>
 <!ELEMENT createdate (#PCDATA)>
 <!ELEMENT notes (#PCDATA)>
@@ -85,9 +80,8 @@ j
 <!ELEMENT searchkey (#PCDATA)>
 
 <!-- signinback -->
-<!ELEMENT searchback (userlist,flcoklist)>
-<!ELEMENT userlist (user)*>
-<!ELEMENT flcoklist (flock)*>
+<!ELEMENT searchback ((userlist)?,(flocklist)?)>
+<!ELEMENT userlist (user)+>
 
 <!-- CRA -->
 <!ELEMENT CRA (cra)>
@@ -98,7 +92,7 @@ j
 <!-- flocknumber -->
 <!ELEMENT flocknumber (fid,uid,operator)>
 <!ELEMENT operator (#PCDATA)>
-<!ATTLIST operator optype (add | new) "add">
+<!ATTLIST operator optype (add|new) "add">
 
 <!-- frienddelete -->
 <!ELEMENT frienddelete (ownerid,targetid)>
@@ -122,8 +116,7 @@ j
 <!ELEMENT getonlineuserapback (user)>
 
 <!-- exit -->
-<!ELEMENT exit (uid,friendlist)>
-
+<!ELEMENT exit (uid,(friendlist)?)>
 
 
 

@@ -7,23 +7,20 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import tools.PrintDebug.ErrorType;
+import tools.TDU.TDUType;
 
 
 public class XMLBuilder {
 	private static XMLOutputFactory factory=XMLOutputFactory.newInstance();
-	public enum XBType{
-		LOGIN,SIGNIN,RECORDREQ,RECORD,
-		SEARCH,CRA,FRIENDADD,FLOCKNUMBER,FRIENDDELETE,
-		FLOCKCREATE,FLOCKDELETE,FLOCKNUMBERSREQ,GETONLINEUSERAP,
-		EXIT
-	};
 	public XMLBuilder(){}
-	public static void builder(OutputStream outputStream,XBType xbtype,String[] texts) throws XMLStreamException{
+	public static void builder(OutputStream outputStream,TDU tdu) throws XMLStreamException{
 		XMLStreamWriter writer=factory.createXMLStreamWriter(outputStream, "UTF-8");
 		writer.writeStartDocument();
 		writer.writeDTD("<!DOCTYPE mimiqq SYSTEM \"xml/mimiqq.dtd\">");
 		writer.writeStartElement("mimiqq");
 		writer.writeDefaultNamespace("www.orchid.party/mimiqq");
+		TDUType xbtype=tdu.type;
+		String[] texts=tdu.getTextsArray();
 		switch (xbtype) {
 		case LOGIN:
 			login(writer, texts);break;
@@ -54,7 +51,7 @@ public class XMLBuilder {
 		case EXIT:
 			exit(writer, texts);break;
 		default:
-			PrintDebug.PD("XMLBuilder", "builder", ErrorType.DISCOMFOR);
+			PrintDebug.PD("XMLBuilder", "builder", ErrorType.USAGE_ERR);
 			break;
 		}
 		
