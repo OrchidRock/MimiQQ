@@ -12,8 +12,8 @@ drop table if exists quser;
 
 create table quser (
 	ID char(8) not null primary key,
-	nickname varchar(10) not null,
 	password char(16) not null,
+	nickname varchar(10) not null,
 	email varchar(20),
 	image blob(6144)
 	onlinestate boolean default false,
