@@ -3,13 +3,18 @@ package tools;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.User;
+
 /**
  * The Transmit data unit
  *
  */
 public class TDU {
-	public List<String> texts=new ArrayList<>();
+	private List<String> texts=new ArrayList<>();
 	public TDUType type;
+	public int TAG=0;
+	public User ONLINEUSER=null;
+	
 	public enum TDUType{
 		LOGIN,SIGNIN,RECORDREQ,RECORD,
 		SEARCH,CRA,FRIENDADD,FLOCKNUMBER,FRIENDDELETE,
@@ -19,7 +24,8 @@ public class TDU {
 		FLOCKNUMBERSREQBACK,GETONLINEUSERAPBACK
 	};
 	public TDU(){
-		type=TDUType.RECORD;
+		/*default type */
+		type=null;
 	}
 	public TDU(TDUType type){
 		this.type=type;
@@ -28,6 +34,9 @@ public class TDU {
 		texts.clear();
 		for(int i=0;i<tStrings.length;i++)
 			texts.add(tStrings[i]);
+	}
+	public void setTextsByList(List<String> list){
+		texts=list;
 	}
 	public String[] getTextsArray(){
 		String[] t=new String[texts.size()];

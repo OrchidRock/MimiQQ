@@ -14,7 +14,7 @@ public class Record {
 		recordDate=null;
 		data=null;
 		dataType=RecordType.MESSAGE;
-		targetType=TargetType.USER;
+		targetType=TargetType.user;
 	}
 	
 	
@@ -24,6 +24,6 @@ public class Record {
 		CRA_HELLO,CRA_OK,CRA_FAILED
 	};
 	public enum TargetType{
-		USER,FLOCK
+		user,flock
 	};
 }

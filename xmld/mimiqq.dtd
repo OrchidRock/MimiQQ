@@ -9,7 +9,7 @@
 <!ELEMENT login (user)>
 
 <!-- user -->
-<!ELEMENT user ((uid)?,(password)?,(nickname,email,imageurl)?,
+<!ELEMENT user (uid,(password)?,(nickname,email,imageurl)?,
 				(onlinestate)?,(ipaddress,openport)?)>
 <!ELEMENT uid (#PCDATA)>
 <!ELEMENT password (#PCDATA)>
@@ -21,11 +21,13 @@
 
 <!-- loginback -->
 <!ELEMENT loginback (user,(friendlist)?,(flocklist)?,(crabacklist)?)>
-<!ELEMENT friendlist (friend)+>
-<!ELEMENT flocklist (flock)+>
-<!ELEMENT crabacklist (craback)+>
+<!ELEMENT friendlist (listlength,(friend)+)>
+<!ELEMENT flocklist (listlength,(flock)+)>
+<!ELEMENT crabacklist (listlength,(craback)+)>
+<!ELEMENT listlength (#PCDATA)>
+
 <!-- friend -->
-<!ELEMENT friend (uid,(nickname,email,imageurl,onlinestate)?,(groupname,remark)?,hassession)>
+<!ELEMENT friend (user,(groupname,remark)?,hassession)>
 <!ELEMENT onlinestate (#PCDATA)>
 <!ATTLIST onlinestate olstype (Y|N) "Y">
 <!ELEMENT groupname (#PCDATA)>
@@ -65,10 +67,10 @@
 
 <!-- recordreqback -->
 <!ELEMENT recordreqback (recordlist,(beforeday)?)>
-<!ELEMENT recordlist (record)*>
+<!ELEMENT recordlist (listlength,(record)*)>
 
 <!-- record -->
-<!ELEMENT record (ownerid,targetid,recorddate,data)>
+<!ELEMENT record (ownerid,(ipaddress,openport)?,targetid,recorddate,data)>
 <!ATTLIST record recordtype (MESSAGE|PICTURE|FILE|IAMBACK|
 		GOODBAY|BREAKOFF|SEEHERE|IAMQUIT|HESHEJOIN|
 		CRA_HELLO|CRA_OK|CRA_FAILED) "MESSAGE">
@@ -82,7 +84,7 @@
 
 <!-- signinback -->
 <!ELEMENT searchback ((userlist)?,(flocklist)?)>
-<!ELEMENT userlist (user)+>
+<!ELEMENT userlist (listlength,(user)+)>
 
 <!-- CRA -->
 <!ELEMENT CRA (cra)>

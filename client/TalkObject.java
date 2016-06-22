@@ -9,16 +9,16 @@ package client;
 public class TalkObject {
 	String ID;
 	String name;
-	byte[] image;
+	String imageurl;
 	public TalkObject(){
 		ID="";
 		name="";
-		image=null;
+		imageurl="";
 	}
-	public TalkObject(String id,String name,byte[] image){
+	public TalkObject(String id,String name,String image){
 		this.ID=id;
 		this.name=name;
-		this.image=image;
+		this.imageurl=image;
 	}
 	public String toString(){
 		return "id="+ID+",name="+name;

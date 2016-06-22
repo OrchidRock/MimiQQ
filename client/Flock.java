@@ -17,6 +17,13 @@ public class Flock extends TalkObject{
 		createrID="";
 		notes="";
 	} 
+	public User getCreaterUser(){
+		for(User user:numbers){
+			if(user.ID==createrID)
+				return user;
+		}
+		return null;
+	}
 	@Override
 	public boolean equals(Object other){
 		if(this==other)
