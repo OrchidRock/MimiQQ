@@ -3,6 +3,7 @@
 <mimiqq xmlns="www.orchid.party/mimiqq">
 	<recordreqback>
 		<recordlist>
+			<listlength>2</listlength>
 			<record recordtype="MESSAGE">
 				<ownerid>1058712592</ownerid>
 				<targetid type="user">10000000</targetid>

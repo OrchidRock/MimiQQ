@@ -2,6 +2,7 @@ package tools;
 
 import java.io.InputStream;
 
+import javax.swing.text.AbstractDocument.LeafElement;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -55,6 +56,14 @@ public class XMLParser {
 					tdu.clear();
 					record(reader, tdu);
 					break;
+				case CRABACK:
+					tdu.type=TDUType.CRABACK;
+					tdu.clear();
+					craback(reader,tdu);
+					break;
+				case FLOCKCREATEBACK:
+					flockcreateback(reader,tdu);
+					break;
 				default:
 					PrintDebug.PD("XMLParser", "builder", ErrorType.USAGE_ERR);
 					break;
@@ -63,6 +72,19 @@ public class XMLParser {
 			}
 		}
 		return tdu;
+	}
+
+	
+
+	private static void flockcreateback(XMLStreamReader reader, TDU tdu) throws XMLStreamException {
+		tdu.type = TDUType.FLOCKCREATEBACK;
+		tdu.clear();
+		while (reader.hasNext()) {
+			int event = reader.next();
+			if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("fid")) {
+				findIWantTextAndToTDU(reader, "fid", tdu, false);
+			}
+		}
 	}
 
 	private static void loginback(XMLStreamReader reader, TDU tdu) throws XMLStreamException {
@@ -101,7 +123,7 @@ public class XMLParser {
 		tdu.clear();
 		while (reader.hasNext()) {
 			int event = reader.next();
-			if (event == XMLStreamConstants.START_ELEMENT) {
+			if (event == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("uid")) {
 				findIWantTextAndToTDU(reader, "uid", tdu, false);
 			}
 		}
@@ -195,7 +217,24 @@ public class XMLParser {
 			reader.next();
 		}
 	}
-
+	private static void craback(XMLStreamReader reader, TDU tdu) throws XMLStreamException {
+		while (reader.hasNext()) {
+			if (reader.isEndElement() && reader.getLocalName().equals("craback"))
+				break;
+			if(reader.isStartElement() && reader.getLocalName().equals("craback")){
+				reader.nextTag();
+				findIWantTextAndToTDU(reader, "ownerid", tdu, true);
+				findIWantAttributeAndToTDU(reader, "targetid", tdu);
+				tdu.append(reader.getText());
+				reader.nextTag();
+				reader.nextTag();
+				findIWantTextAndToTDU(reader, "notes", tdu, true);
+				//findIWantTextAndToTDU(reader, "state", tdu, false);
+				findIWantAttributeAndToTDU(reader, "state", tdu);
+			}
+			reader.next();
+		}
+	}
 	private static void parserFriendList(XMLStreamReader reader, TDU tdu) throws XMLStreamException {
 		while (reader.hasNext()) {
 			int event = reader.nextTag();
@@ -249,19 +288,15 @@ public class XMLParser {
 	private static void parserCrabackList(XMLStreamReader reader, TDU tdu) throws XMLStreamException {
 		while (reader.hasNext()) {
 			int event = reader.nextTag();
+			//System.out.println(reader.getLocalName());
 			if (reader.isEndElement() && reader.getLocalName().equals("crabacklist"))
 				break;
 			if ((event == XMLStreamConstants.START_ELEMENT) && reader.getLocalName().equals("listlength")) {
-				String listlength = findIWantTextAndToTDU(reader, "listlength", tdu, true);
+				String listlength = findIWantTextAndToTDU(reader, "listlength", tdu, false);
 				for (int i = 0; i < Integer.valueOf(listlength); i++) {
 					reader.nextTag();
-					findIWantTextAndToTDU(reader, "ownerid", tdu, true);
-					findIWantAttributeAndToTDU(reader, "targetid", tdu);
-					tdu.append(reader.getText());
-					reader.nextTag();
-					reader.nextTag();
-					findIWantTextAndToTDU(reader, "notes", tdu, true);
-					findIWantTextAndToTDU(reader, "state", tdu, false);
+					craback(reader, tdu);
+					//reader.nextTag();
 				}
 			}
 		}

@@ -20,8 +20,7 @@ public class Record {
 	
 	public enum RecordType{
 		MESSAGE,PICTURE,FILE,IAMBACK,
-		GOODBAY,BREAKOFF,SEEHERE,IAMQUIT,HESHEJOIN,
-		CRA_HELLO,CRA_OK,CRA_FAILED
+		GOODBAY,BREAKOFF,SEEHERE,IAMQUIT,HESHEJOIN
 	};
 	public enum TargetType{
 		user,flock

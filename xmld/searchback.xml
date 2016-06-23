@@ -3,6 +3,7 @@
 <mimiqq xmlns="www.orchid.party/mimiqq">
 <searchback>
 	<userlist>
+		<listlength>2</listlength>
 		<user>
 			<uid>1058712592</uid>
 			<nickname>Rock</nickname>
@@ -19,6 +20,7 @@
 		</user>
 	</userlist>
 	<flocklist>
+		<listlength>1</listlength>
 		<flock>
 			<fid>Linux</fid>
 			<name>LL</name>

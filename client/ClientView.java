@@ -1,6 +1,6 @@
 package client;
 
-class ClientView {
+public class ClientView {
 	
 	ClientMoudle moudle;
 	public ClientView(){

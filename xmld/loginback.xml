@@ -3,21 +3,28 @@
 <mimiqq xmlns="www.orchid.party/mimiqq">
 	<loginback>
 		<user>
+		    <uid>1058712592</uid>
 			<nickname>Rock</nickname>
 			<email>rocksevencolor@gmail.com</email>
 			<imageurl>rock.png</imageurl>
 		</user>
 		<friendlist>
+		    <listlength>1</listlength>
 			<friend>
-				<uid>10000000</uid>
-				<nickname>Puppy</nickname>
-				<email>1058712592@qq.com</email>
-				<imageurl>puppy.png</imageurl>
-				<onlinestate olstype="Y"/>
+			    <user>
+					<uid>10000000</uid>
+					<nickname>Puppy</nickname>
+					<email>1058712592@qq.com</email>
+					<imageurl>puppy.png</imageurl>
+					<onlinestate olstype="Y"/>
+					<ipaddress>127.0.0.1</ipaddress>
+					<openport>8800</openport>
+				</user>
 				<hassession hstype="Y"/>
 			</friend>
 		</friendlist>
 		<flocklist>
+			<listlength>1</listlength>
 			<flock>
 				<fid>10000001</fid>
 				<name>Linux</name>
@@ -28,11 +35,18 @@
 				</flock>
 		</flocklist>
 		<crabacklist>
+			<listlength>2</listlength>
 			<craback>
 				<ownerid>1058712592</ownerid>
 				<targetid type="flock">10000001</targetid>
 				<notes>I want join in yours</notes>
-				<state>ok</state>
+				<state statetype="waiting" />
+			</craback>
+			<craback>
+				<ownerid>1058712592</ownerid>
+				<targetid type="flock">10000001</targetid>
+				<notes>I want join in yours</notes>
+				<state statetype="ok" />
 			</craback>
 		</crabacklist>
 	</loginback>

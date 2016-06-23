@@ -29,4 +29,13 @@ public class Loginer extends User{
 			createRelActivities=new ArrayList<>();
 		createRelActivities.add(craback);
 	}
+	public Flock getFlock(String flockID){
+		if(flocks==null)
+			return null;
+		for(Flock  flock : flocks){
+			if(flock.ID.equals(flockID))
+				return flock;
+		}
+		return null;
+	}
 }

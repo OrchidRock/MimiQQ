@@ -75,44 +75,46 @@ public class XMLBuilder {
 	}
 
 	private static void login(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
+		int j=0;
 		writer.writeStartElement("login");
 		writer.writeStartElement("user");
 		writer.writeStartElement("uid");
-		writer.writeCharacters(texts[0]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("password");
-		writer.writeCharacters(texts[1]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("ipaddress");
-		writer.writeCharacters(texts[2]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("openport");
-		writer.writeCharacters(texts[3]);
+		writer.writeCharacters(texts[j++]);
 	}
 
 	private static void signin(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
+		int j=0;
 		writer.writeStartElement("signin");
 		writer.writeStartElement("user");
 		writer.writeStartElement("uid");
-		writer.writeCharacters(texts[0]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("password");
-		writer.writeCharacters(texts[1]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("nickname");
-		writer.writeCharacters(texts[2]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("email");
-		writer.writeCharacters(texts[3]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("imageurl");
-		writer.writeCharacters(texts[4]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("ipaddress");
-		writer.writeCharacters(texts[5]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("openport");
-		writer.writeCharacters(texts[6]);
+		writer.writeCharacters(texts[j++]);
 	}
 
 	private static void record(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
@@ -140,7 +142,9 @@ public class XMLBuilder {
 		writer.writeStartElement("data");
 		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
-
+		writer.writeStartElement("forwarding");
+		writer.writeCharacters((texts.length>j)?texts[j++]:"N");//default N
+		writer.writeEndElement();
 	}
 
 	private static void recordreq(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
@@ -158,8 +162,9 @@ public class XMLBuilder {
 
 	private static void search(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
 		writer.writeStartElement("search");
+		writer.writeAttribute("searchgoal", texts[0]);
 		writer.writeStartElement("searchkey");
-		writer.writeCharacters(texts[0]);
+		writer.writeCharacters(texts[1]);
 		writer.writeEndElement();
 	}
 
@@ -226,27 +231,32 @@ public class XMLBuilder {
 	}
 
 	private static void flockcreate(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
+		int j=0;
 		writer.writeStartElement("flockcreate");
 		writer.writeStartElement("flock");
+		writer.writeStartElement("fid");
+		writer.writeCharacters(texts[j++]);
+		writer.writeEndElement();
 		writer.writeStartElement("name");
-		writer.writeCharacters(texts[0]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("createrid");
-		writer.writeCharacters(texts[1]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("createdate");
-		writer.writeCharacters(texts[2]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("imageurl");
-		writer.writeCharacters(texts[3]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 		writer.writeStartElement("notes");
-		writer.writeCharacters(texts[4]);
+		writer.writeCharacters(texts[j++]);
 		writer.writeEndElement();
 	}
 
 	private static void flockdelete(XMLStreamWriter writer, String[] texts) throws XMLStreamException {
 		writer.writeStartElement("flockdelete");
+		writer.writeStartElement("flock");
 		writer.writeStartElement("fid");
 		writer.writeCharacters(texts[0]);
 		writer.writeEndElement();

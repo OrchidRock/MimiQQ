@@ -4,6 +4,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+
 import tools.TDU;
 import tools.TDU.TDUType;
 
@@ -22,7 +23,7 @@ public class Controler {
 	private final static int TDU_QUEUE_SERVER_SIZE = 100;
 
 	private static String serverIP = "localhost";
-	private static String serverPort = "80";
+	private static int serverPort = 80;
 
 	public static String clientIP = "localhost";
 	public static String clientPort = "53";// DNS default port
@@ -36,16 +37,14 @@ public class Controler {
 		Thread sendthread = new Thread(sendhandle);
 		sendthread.setDaemon(true);
 		sendthread.start();
-	}
-
-	public void startRecvThread() {
+		
 		/* create a new thread to recv TDU */
 		RecvTDUHandle recvhandle = new RecvTDUHandle(clientIP, clientPort, comeTdus);
 		Thread recvthread = new Thread(recvhandle);
 		recvthread.setDaemon(true);
 		recvthread.start();
+		
 	}
-
 	public void send(TDU tdu) {
 		try {
 			if (tdu.type == TDUType.LOGIN) {
@@ -59,14 +58,27 @@ public class Controler {
 		}
 	}
 
-	public TDU recv() {
+	public TDU recv(TDUType type,boolean iswaiting) {
 		TDU result=null;
 		try {
-			result= comeTdus.poll(100, TimeUnit.MILLISECONDS);
+			if(iswaiting){
+				result=comeTdus.take();
+			}
+			else
+				result= comeTdus.poll(100, TimeUnit.MILLISECONDS);
+			if(result!=null){
+				if(result.type!=type){
+					comeTdus.put(result);
+					result=null;
+				}
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
+	}
+	public BlockingQueue<TDU> getComeTdus(){
+		return comeTdus;
 	}
 }
