@@ -20,7 +20,7 @@
 <!ELEMENT imageurl (#PCDATA)>
 
 <!-- loginback -->
-<!ELEMENT loginback (user,friendlist,flocklist,crabacklist)>
+<!ELEMENT loginback (user,friendlist,flocklist,crabacklist,recordlist)>
 	<!--user <uid,nickname,email,imageurl> -->
 <!ELEMENT friendlist (listlength,(friend)*)>
 	<!-- friend < user <uid,nickname,email,imageurl,onlinestate

@@ -23,10 +23,10 @@ public class Controler {
 	private final static int TDU_QUEUE_SERVER_SIZE = 100;
 
 	private static String serverIP = "localhost";
-	private static int serverPort = 80;
+	private static int serverPort = 8080;
 
 	public static String clientIP = "localhost";
-	public static String clientPort = "53";// DNS default port
+	public static String clientPort = "8800";// DNS default port
 	// block queue
 	BlockingQueue<TDU> comeTdus = new ArrayBlockingQueue<>(TDU_QUEUE_SERVER_SIZE);
 	BlockingQueue<TDU> toTdus = new ArrayBlockingQueue<>(TDU_QUEUE_SERVER_SIZE);
@@ -73,12 +73,18 @@ public class Controler {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
 	}
-	public BlockingQueue<TDU> getComeTdus(){
-		return comeTdus;
+	public TDU getTopComeTdus(){
+		TDU tdu=null;
+		try {
+			tdu=comeTdus.take();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tdu;
 	}
 }

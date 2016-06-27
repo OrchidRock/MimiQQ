@@ -7,7 +7,7 @@ public class Record {
 	String data;
 	RecordType dataType;
 	TargetType targetType;
-	
+	boolean isforwarding=false;
 	public Record(){
 		senderID=null;
 		targetID=null;

@@ -32,7 +32,10 @@ class SendTDUHandle implements Runnable {
 		try {
 			while (true) {
 				TDU tdu = toTdus.take();
+				outputStreamServer=System.out;
 				if ((tdu.TAG & Controler.TO_SERVER_TAG) > 0) {
+					if(outputStreamServer==null)
+						outputStreamServer=new UDPOutputStream(server, port);
 					XMLBuilder.builder(outputStreamServer, tdu);
 				}
 				if ((tdu.TAG & Controler.TO_SIGNALCLIENT_TAG) > 0) {

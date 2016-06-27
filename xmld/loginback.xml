@@ -49,5 +49,8 @@
 				<state statetype="ok" />
 			</craback>
 		</crabacklist>
+		<recordlist>
+			<listlength>0</listlength>
+		</recordlist>
 	</loginback>
 </mimiqq>

@@ -1,35 +1,39 @@
 package client;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.ArrayList;
 
 import tools.TDU;
-import transaction.Controler;
+import tools.TDU.TDUType;
 
 class TDUMonitorHandle implements Runnable{
-
-	private Controler controler=null;
-	private Loginer loginer=null;
-	public TDUMonitorHandle(Controler controler,Loginer loginer) {
-		this.controler=controler;
-		this.loginer=loginer;
+	private ClientMoudle moudle=null;
+	private ClientView view=null;
+	public TDUMonitorHandle(ClientMoudle m,ClientView v) {
+		this.moudle=m;
+		this.view=v;
 	}
 	@Override
 	public void run() {
-		BlockingQueue<TDU> comeTdus=controler.getComeTdus();
 		while(true){
-			try {
-				TDU tdu=comeTdus.take();
-				switch (tdu.type) {
+				TDUType type=moudle.monitor();
+				switch (type) {
 				case LOGINBACK:
 					break;
+				case SIGNINBACK:
+					break;//do nothing
+				case SEARCHBACK:
+					break;//do nothing
+				case RECORDREQBACK:
+					break;//do nothing
+				case CRABACK:
+					break;
+				case FLOCKCREATEBACK:
+					break;//do nothing
 				case RECORD:
+					break;
 				default:
 					break;
 				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 

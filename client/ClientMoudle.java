@@ -16,15 +16,10 @@ import transaction.Controler;
 class ClientMoudle {
 	private Loginer loginer;
 	private Controler controler;
-
+	
 	public ClientMoudle() {
 		controler = new Controler();
 		loginer = null;
-		/*monitor controler.comeTdus*/
-		TDUMonitorHandle handle=new TDUMonitorHandle(controler,loginer);
-		Thread thread=new Thread(handle);
-		thread.setDaemon(true);
-		thread.start();
 	}
 
 	public List<Record> getFriendRecords(Friend friend) {
@@ -74,62 +69,10 @@ class ClientMoudle {
 		TDU loginBackTdu = controler.recv(TDUType.LOGINBACK,true);// may be sleep;
 		if (loginBackTdu == null)
 			return null;
-		text = loginBackTdu.getTextsArray();
 		if (loginer == null)
 			loginer = new Loginer();
-		int j = 0;
-		loginer.ID = text[j++];
-		loginer.name = text[j++];
-		loginer.emailAddress = text[j++];
-		loginer.imageurl = text[j++];
-		loginer.ipaddress = Controler.clientIP;
-		loginer.port = Controler.clientPort;
-
-		List<User> onlineFriends = new ArrayList<>();
-		// friendlist
-		int friendcount = Integer.valueOf(text[j++]);
-		for (int i = 0; i < friendcount; i++) {
-			Friend friend = new Friend();
-			friend.ID = text[j++];
-			friend.name = text[j++];
-			friend.emailAddress = text[j++];
-			friend.imageurl = text[j++];
-			friend.onlineState = (text[j++].equals("Y")) ? true : false;
-			if (friend.onlineState) {
-				friend.ipaddress = text[j++];
-				friend.port = text[j++];
-				onlineFriends.add(friend);
-			}
-			friend.groupname = text[j++];
-			friend.remark = text[j++];
-			friend.hasSession = (text[j++].equals("Y")) ? true : false;
-			loginer.fullNewFriend(friend);
-		}
-
-		// flocklist
-		int flockcount = Integer.valueOf(text[j++]);
-		for (int i = 0; i < flockcount; i++) {
-			Flock flock = new Flock();
-			flock.ID = text[j++];
-			flock.name = text[j++];
-			flock.createrID = text[j++];
-			flock.createDate = text[j++];
-			flock.imageurl = text[j++];
-			flock.notes = text[j++];
-			loginer.fullNewFlock(flock);
-		}
-
-		// crabacklist
-		int crabackcount = Integer.valueOf(text[j++]);
-		for (int i = 0; i < crabackcount; i++) {
-			CreateRelActivity craback = new CreateRelActivity();
-			craback.ownerID = text[j++];
-			craback.targetType = TargetType.valueOf(text[j++]);
-			craback.notes = text[j++];
-			craback.state = Rel.valueOf(text[j++]);
-			loginer.fullNewCRAback(craback);
-		}
-
+		
+		List<User> onlineFriends=parserLoginBackTDU(loginBackTdu);
 		// sendDataToUser(user, record, tag);
 		// record all online friend
 		Record record = new Record();
@@ -153,19 +96,18 @@ class ClientMoudle {
 		signinTdu.setTextsByArray(text);
 		controler.send(signinTdu);
 
-		TDU signinbackTdu = controler.recv(TDUType.SIGNINBACK,true);
-		if (signinbackTdu == null)
-			return null;
-		text = signinbackTdu.getTextsArray();
 		if (loginer == null)
 			loginer = new Loginer();
-		int j = 0;
-		loginer.ID = text[j++];
 		loginer.name = register.name;
 		loginer.emailAddress = register.emailAddress;
 		loginer.imageurl = register.imageurl;
 		loginer.ipaddress = Controler.clientIP;
 		loginer.port = Controler.clientPort;
+		
+		TDU signinbackTdu = controler.recv(TDUType.SIGNINBACK,true);
+		if (signinbackTdu == null)
+			return loginer;
+		parserSigninBackTDU(signinbackTdu);
 		return loginer;
 	}
 
@@ -196,6 +138,10 @@ class ClientMoudle {
 			user.emailAddress = text[j++];
 			user.imageurl = text[j++];
 			user.onlineState = (text[j++].equals("Y")) ? true : false;
+			if(user.onlineState){
+				user.ipaddress=text[j++];
+				user.port=text[j++];
+			}
 			talkObjects.add(user);
 		}
 		
@@ -385,6 +331,7 @@ class ClientMoudle {
 		record.senderID=loginer.ID;
 		record.targetID=flockID;
 		record.targetType=TargetType.flock;
+		record.isforwarding=true;
 		sendDataToFlock(flock, record, TAG);
 		
 		return true;
@@ -477,6 +424,7 @@ class ClientMoudle {
 		record.senderID=loginer.ID;
 		record.targetID=flockID;
 		record.targetType=TargetType.flock;
+		record.isforwarding=true;
 		sendDataToFlock(flock, record, TAG);
 		return true;
 	}
@@ -492,18 +440,20 @@ class ClientMoudle {
 		flockCreateTdu.setTextsByArray(fcttext);
 		controler.send(flockCreateTdu);
 
+		TDU flcbackTdu=controler.recv(TDUType.FLOCKCREATEBACK,false);
+		if(flcbackTdu==null)
+			return null;
+
 		if (loginer.flocks == null)
 			loginer.flocks = new ArrayList<>();
 		loginer.flocks.add(newflock);
 		newflock.numbers = new ArrayList<>();
 		newflock.numbers.add(loginer);
-
-		TDU flcbackTdu=controler.recv(TDUType.FLOCKCREATEBACK,false);
-		if(flcbackTdu==null)
-			return null;
+		
 		String[] fbttext=flcbackTdu.getTextsArray();
 		newflock.ID=fbttext[0];
 		return newflock;
+		
 	}
 
 	public boolean dissolveFlock(String flockID) {
@@ -544,6 +494,7 @@ class ClientMoudle {
 		list.add(record.targetID);
 		list.add(format.format(new Date()));
 		list.add("");
+		list.add(record.isforwarding?"Y":"N");
 		recordTdu.setTextsByList(list);
 		recordTdu.ONLINE_USER_LIST = users;
 		controler.send(recordTdu);
@@ -561,7 +512,7 @@ class ClientMoudle {
 		TDU flockrecordTdu=new TDU();
 		flockrecordTdu.TAG=tag;
 		flockrecordTdu.type=TDUType.RECORD;
-		String forwarding="Y";
+		//String forwarding="Y";
 		/*if(flock.numbers!=null){
 			forwarding="N";
 			List<User> users=new ArrayList<>();
@@ -574,7 +525,8 @@ class ClientMoudle {
 		}*/
 		DateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 		String[] text={record.dataType.name(),loginer.ID,TargetType.flock.name(),
-				flock.ID,format.format(new Date()),record.data,forwarding};
+				flock.ID,format.format(new Date()),record.data,
+				record.isforwarding?"Y":"N"};
 		flockrecordTdu.setTextsByArray(text);
 		controler.send(flockrecordTdu);
 	}
@@ -587,12 +539,24 @@ class ClientMoudle {
 		exitTdu.type = TDUType.EXIT;
 		List<String> list = new ArrayList<>();
 		list.add(loginer.ID);
+		
+		//send rocord to online friend
+		Record record = new Record();
+		record.senderID = loginer.ID;
+		record.dataType = RecordType.GOODBAY;
+		record.data = "";
+		record.targetType = TargetType.user;
+		
 		// friendlist
 		if (loginer.friends != null) {
 			for (int i = 0; i < loginer.friends.size(); i++) {
 				Friend friend = loginer.friends.get(i);
 				list.add(friend.ID);
 				list.add((friend.hasSession) ? "Y" : "N");
+				if(friend.onlineState){
+					record.targetID=friend.ID;
+					sendDataToSignalUser(friend, record, Controler.TO_SIGNALCLIENT_TAG);
+				}
 			}
 		}
 		exitTdu.setTextsByList(list);
@@ -600,13 +564,15 @@ class ClientMoudle {
 	}
 
 	private List<Record> parserRecordReqBackTDU(TDU rrbacktdu) {
-		int j = 0;
-		String[] text = rrbacktdu.getTextsArray();
+		List<Record> records = new ArrayList<>();
+		parserRecordListTDU(records, rrbacktdu, 0);
+		return records;
+	}
+	private int parserRecordListTDU(List<Record> records,TDU rltdu,int j){
+		String[] text = rltdu.getTextsArray();
 		int recordCount = Integer.valueOf(text[j++]);
 		if (recordCount == 0)
-			return null;
-		// String beforeday="";
-		List<Record> records = new ArrayList<>();
+			return j;
 		for (int i = 0; i < recordCount; i++) {
 			Record record = new Record();
 			record.dataType = RecordType.valueOf(text[j++]);
@@ -617,6 +583,116 @@ class ClientMoudle {
 			record.data = text[j++];
 			records.add(record);
 		}
-		return records;
+		return j;
+	}
+	private List<User> parserLoginBackTDU(TDU lbtdu){
+		String[] text = lbtdu.getTextsArray();
+		int j = 0;
+		loginer.ID = text[j++];
+		loginer.name = text[j++];
+		loginer.emailAddress = text[j++];
+		loginer.imageurl = text[j++];
+		loginer.ipaddress = Controler.clientIP;
+		loginer.port = Controler.clientPort;
+
+		List<User> onlineFriends = new ArrayList<>();
+		// friendlist
+		int friendcount = Integer.valueOf(text[j++]);
+		for (int i = 0; i < friendcount; i++) {
+			Friend friend = new Friend();
+			friend.ID = text[j++];
+			friend.name = text[j++];
+			friend.emailAddress = text[j++];
+			friend.imageurl = text[j++];
+			friend.onlineState = (text[j++].equals("Y")) ? true : false;
+			if (friend.onlineState) {
+				friend.ipaddress = text[j++];
+				friend.port = text[j++];
+				onlineFriends.add(friend);
+			}
+			friend.groupname = text[j++];
+			friend.remark = text[j++];
+			friend.hasSession = (text[j++].equals("Y")) ? true : false;
+			loginer.fullNewFriend(friend);
+		}
+
+		// flocklist
+		int flockcount = Integer.valueOf(text[j++]);
+		for (int i = 0; i < flockcount; i++) {
+			Flock flock = new Flock();
+			flock.ID = text[j++];
+			flock.name = text[j++];
+			flock.createrID = text[j++];
+			flock.createDate = text[j++];
+			flock.imageurl = text[j++];
+			flock.notes = text[j++];
+			loginer.fullNewFlock(flock);
+		}
+
+		// crabacklist
+		int crabackcount = Integer.valueOf(text[j++]);
+		for (int i = 0; i < crabackcount; i++) {
+			j=parserCraBackTDU(lbtdu, j);
+		}
+		int recordcount=Integer.valueOf(text[j]);
+		if(recordcount>1){
+			if(loginer.newRecords==null)
+				loginer.newRecords=new ArrayList<>();
+			parserRecordListTDU(loginer.newRecords,lbtdu, j);
+		}
+		
+		return onlineFriends;
+	}
+	/*
+	 * paser craback TDU that get from server.
+	 */
+	private int parserCraBackTDU(TDU cbtdu,int j){
+		String [] text=cbtdu.getTextsArray();
+		CreateRelActivity craback = new CreateRelActivity();
+		craback.ownerID = text[j++];
+		craback.targetType = TargetType.valueOf(text[j++]);
+		craback.notes = text[j++];
+		craback.state = Rel.valueOf(text[j++]);
+		loginer.fullNewCRAback(craback);
+		return j;
+	}
+	private void parserSigninBackTDU(TDU sibtdu){
+		String[] text = sibtdu.getTextsArray();
+		int j = 0;
+		loginer.ID = text[j++];
+	}
+	/*
+	 * The View class can create one thread call
+	 * this method looply,then deal with some events;
+	 */
+	public TDUType monitor(){
+		TDU topTdu=controler.getTopComeTdus();
+		if(topTdu==null)
+			return null;
+		switch (topTdu.type) {
+		case LOGINBACK:
+			parserLoginBackTDU(topTdu);
+			break;
+		case SIGNINBACK:
+			parserSigninBackTDU(topTdu);
+			break;//do nothing
+		case SEARCHBACK:
+			break;//do nothing
+		case RECORDREQBACK:
+			break;//do nothing
+		case CRABACK:
+			parserCraBackTDU(topTdu,0);
+			break;
+		case FLOCKCREATEBACK:
+			break;//do nothing
+		case RECORD:
+			if(loginer.newRecords==null)
+				loginer.newRecords=new ArrayList<>();
+			parserRecordListTDU(loginer.newRecords,topTdu,0);
+			break;
+		default:
+			break;
+		}
+		return topTdu.type;
 	}
 }

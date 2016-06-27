@@ -110,6 +110,9 @@ public class XMLParser {
 				case "crabacklist":
 					parserCrabackList(reader, tdu);
 					break;
+				case "recordlist":
+					parserRecordList(reader, tdu);
+					break;
 				default:
 					PrintDebug.PD("XMLParser", "loginback", ErrorType.USAGE_ERR);
 					break;
@@ -326,11 +329,21 @@ public class XMLParser {
 				String listlength = findIWantTextAndToTDU(reader, "listlength", tdu, true);
 				for (int i = 0; i < Integer.valueOf(listlength); i++) {
 					reader.nextTag();
+					//System.out.println(reader.getLocalName());
 					findIWantTextAndToTDU(reader, "uid", tdu, true);
 					findIWantTextAndToTDU(reader, "nickname", tdu, true);
 					findIWantTextAndToTDU(reader, "email", tdu, true);
 					findIWantTextAndToTDU(reader, "imageurl", tdu, true);
-					findIWantAttributeAndToTDU(reader, "onlinestate", tdu);
+					String olstype=findIWantAttributeAndToTDU(reader, "onlinestate", tdu);
+					if(olstype.equals("Y")){
+						reader.nextTag();
+						findIWantTextAndToTDU(reader, "ipaddress", tdu, true);
+						findIWantTextAndToTDU(reader, "openport", tdu, true);
+						reader.nextTag();
+						continue;
+					}
+					reader.nextTag();
+					reader.nextTag();
 				}
 			}
 		}

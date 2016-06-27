@@ -3,7 +3,7 @@
 <mimiqq xmlns="www.orchid.party/mimiqq">
 <searchback>
 	<userlist>
-		<listlength>2</listlength>
+		<listlength>3</listlength>
 		<user>
 			<uid>1058712592</uid>
 			<nickname>Rock</nickname>
@@ -17,6 +17,17 @@
 			<email>123456</email>
 			<imageurl>puppy.png</imageurl>
 			<onlinestate olstype="Y"/>
+			<ipaddress>127.78.3.2</ipaddress>
+			<openport>53</openport>
+		</user>
+		<user>
+			<uid>100000002</uid>
+			<nickname>puppy2</nickname>
+			<email>123456</email>
+			<imageurl>puppy.png</imageurl>
+			<onlinestate olstype="Y"/>
+			<ipaddress>127.78.3.2</ipaddress>
+			<openport>53</openport>
 		</user>
 	</userlist>
 	<flocklist>

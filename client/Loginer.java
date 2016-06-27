@@ -7,12 +7,13 @@ public class Loginer extends User{
 	List<Friend> friends;
 	List<Flock> flocks;
 	List<CreateRelActivity> createRelActivities;
-	
+	List<Record> newRecords;
 	public Loginer(){
 		super();
 		friends=null;
 		flocks=null;
 		createRelActivities=null;
+		newRecords=null;
 	}
 	public void fullNewFriend(Friend friend){
 		if(friends==null)
