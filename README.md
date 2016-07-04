@@ -14,11 +14,3 @@ Then every client in this LAN will find the server automatic.
 It provide the most of servers that other communication application can do.
 But it is good at for file transmit,specia for big-file.
 
-#author
-Rock CQU ChongQing China.(YaLong Guo)
-	E-mail:rocksevencolor@gmail.com
-
-#date
-	2016.4.19
-
-thanks.
