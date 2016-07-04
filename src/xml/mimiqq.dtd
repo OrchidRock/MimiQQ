@@ -1,0 +1,151 @@
+<!ELEMENT mimiqq ((textcount)?,(login|loginback|signin|signinback|record
+					|recordreq|recordreqback|search|searchback
+					|CRA|craback|friendadd|flocknumber|frienddelete
+					|flockcreate|flockcreateback|flockdelete|flocknumbersreq
+					|flocknumbersreqback|getonlineuserap		
+				        |getonlineuserapback|exit))>
+<!ATTLIST mimiqq xmlns CDATA #FIXED "www.orchid.party/mimiqq">
+<!ELEMENT textcount (#PCDATA)>
+<!-- login -->
+<!ELEMENT login (user)> <!-- user <uid,password,ipaddress,openport> -->
+
+<!-- user -->
+<!ELEMENT user (uid,(password)?,(nickname,email,imageurl)?,
+				(onlinestate)?,(ipaddress,openport)?)>
+<!ELEMENT uid (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
+<!ELEMENT ipaddress (#PCDATA)>
+<!ELEMENT openport (#PCDATA)>
+<!ELEMENT nickname (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
+<!ELEMENT imageurl (#PCDATA)>
+
+<!-- loginback -->
+<!ELEMENT loginback (user,friendlist,flocklist,crabacklist,recordlist)>
+	<!--user <uid,nickname,email,imageurl> -->
+<!ELEMENT friendlist (listlength,(friend)*)>
+	<!-- friend < user <uid,nickname,email,imageurl,onlinestate
+        (,ipaddress,openport)?>,groupname,remark,hassession> -->
+	<!-- if onlinestate.olstype==Y,then user contain ipaddress and openport -->
+<!ELEMENT flocklist (listlength,(flock)*)>
+	<!--  -->
+<!ELEMENT crabacklist (listlength,(craback)*)>
+<!ELEMENT listlength (#PCDATA)>
+
+<!-- friend -->
+<!ELEMENT friend (user,(groupname,remark)?,hassession)>
+<!ELEMENT onlinestate (#PCDATA)>
+<!ATTLIST onlinestate olstype (Y|N) "Y">
+<!ELEMENT groupname (#PCDATA)>
+<!ELEMENT remark (#PCDATA)>
+<!ELEMENT hassession (#PCDATA)>
+<!ATTLIST hassession hstype (Y|N) "Y">
+
+<!-- flock -->
+<!ELEMENT flock (fid,(name,createrid,createdate,imageurl,notes)?)>
+<!ELEMENT fid (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT createrid (#PCDATA)>
+<!ELEMENT createdate (#PCDATA)>
+<!ELEMENT notes (#PCDATA)>
+
+<!-- cra -->
+<!ELEMENT cra (ownerid,targetid,notes,action)>
+<!-- craback -->
+<!ELEMENT craback (ownerid,targetid,notes,state)>
+
+<!ELEMENT ownerid (#PCDATA)>
+<!ELEMENT targetid (#PCDATA)>
+<!ATTLIST targetid type (user|flock) "user">
+<!ELEMENT state (#PCDATA)>
+<!ATTLIST state statetype (waiting|ok|failed) "waiting">
+<!ELEMENT action (#PCDATA)>
+<!ATTLIST action actiontype (new|setok|setfailed|delete) "new">
+
+<!-- signin -->
+<!ELEMENT signin (user)> <!-- user <uid,password,nickname,email,imageurl,ipaddress,openport> -->
+
+<!-- signinback -->
+<!ELEMENT signinback (user)> <!-- user <uid> -->
+
+<!-- recordreq -->
+<!ELEMENT recordreq (ownerid,targetid,beforeday) >
+<!ELEMENT beforeday (#PCDATA)>
+
+<!-- recordreqback -->
+<!ELEMENT recordreqback (recordlist,(beforeday)?)>
+<!ELEMENT recordlist (listlength,(record)*)>
+
+<!-- record -->
+<!ELEMENT record (ownerid,(ipaddress,openport)?,targetid,recorddate,data,forwarding)>
+	  <!-- if recordtype=IAMBACK then contain ipaddress and openport -->
+<!ELEMENT forwarding (#PCDATA)> <!-- forwarding : "Y" or "N" -->
+<!ATTLIST record recordtype (MESSAGE|PICTURE|FILE|IAMBACK|
+		GOODBAY|BREAKOFF|SEEHERE|IAMQUIT|HESHEJOIN) "MESSAGE">
+
+<!ELEMENT recorddate (#PCDATA)>
+<!ELEMENT data (#PCDATA)>
+
+<!-- search -->
+<!ELEMENT search (searchkey)>
+<!ATTLIST search  searchgoal (user|flock|all) "user">
+<!ELEMENT searchkey (#PCDATA)>
+
+<!-- signinback -->
+<!ELEMENT searchback (userlist,flocklist)>
+<!ELEMENT userlist (listlength,(user)*)>
+	  <!-- user <uid,nickname,email,imageurl,onlinestate> -->
+<!-- CRA -->
+<!ELEMENT CRA (cra)>
+
+<!-- friendadd -->
+<!ELEMENT friendadd (uid,friend)> <!-- friend < user <uid>,groupname,remark > -->
+
+<!-- flocknumber -->
+<!ELEMENT flocknumber (fid,uid,operator)>
+<!ELEMENT operator (#PCDATA)>
+<!ATTLIST operator optype (add|delete) "add">
+
+<!-- frienddelete -->
+<!ELEMENT frienddelete (ownerid,targetid)>
+
+<!-- flockcreate -->
+<!ELEMENT flockcreate (flock)>
+
+<!-- flockcreateback -->
+<!ELEMENT flockcreateback (flock)> <!-- flock <fid> -->
+
+<!-- flockdelete -->
+<!ELEMENT flockdelete (flock)> <!-- flock <fid> -->
+
+<!-- flocknumbersreq -->
+<!ELEMENT flocknumbersreq (fid)>
+
+<!-- flocknumbersreqback -->
+<!ELEMENT flocknumbersreqback (fid,userlist)>
+
+<!-- getonlineuserap -->
+<!ELEMENT getonlineuserap (uid)>
+
+<!-- getonlineuserapback -->
+<!ELEMENT getonlineuserapback (user)>
+
+<!-- exit -->
+<!ELEMENT exit (uid,friendlist)>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
